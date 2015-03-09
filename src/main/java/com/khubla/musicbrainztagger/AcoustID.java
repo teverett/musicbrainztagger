@@ -7,7 +7,6 @@ import java.io.IOException;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteException;
-import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.exec.PumpStreamHandler;
 
 /**
@@ -26,8 +25,6 @@ public class AcoustID {
       CommandLine cmdLine = CommandLine.parse(command);
       DefaultExecutor executor = new DefaultExecutor();
       executor.setExitValue(1);
-      ExecuteWatchdog watchdog = new ExecuteWatchdog(60000);
-      executor.setWatchdog(watchdog);
       PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream);
       executor.setStreamHandler(streamHandler);
       executor.execute(cmdLine);
