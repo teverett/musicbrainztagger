@@ -15,8 +15,8 @@ import org.apache.commons.exec.PumpStreamHandler;
  * @author tom
  */
 public class AcoustID {
-   private final static String URL = "http://api.acoustid.org/v2/lookup";
-   private final static String CLIENTID = "";
+   // private final static String URL = "http://api.acoustid.org/v2/lookup";
+   // private final static String CLIENTID = "";
    private final static String FPCALC = "/Users/tom/fpcalc";
 
    public static String chromaprint(File file) throws ExecuteException, IOException {
@@ -27,8 +27,12 @@ public class AcoustID {
       executor.setExitValue(1);
       PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream);
       executor.setStreamHandler(streamHandler);
-      executor.execute(cmdLine);
-      return (outputStream.toString());
+      int ret = executor.execute(cmdLine);
+      if (0 == ret) {
+         return (outputStream.toString());
+      } else {
+         return null;
+      }
    }
 
    public static void lookup(String chromaprint) {
