@@ -81,7 +81,8 @@ public class MusicBrainsTagger {
     * process file
     */
    private static void processMP3(File mp3File) throws Exception {
-      System.out.println(mp3File.getName());
+      String fingerprint = AcoustID.chromaprint(mp3File);
+      System.out.println(mp3File.getName() + " " + fingerprint);
    }
 
    /**
