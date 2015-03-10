@@ -28,6 +28,14 @@ import com.google.gson.JsonParser;
  */
 public class AcoustID {
    /**
+    * chromaprint
+    */
+   public static class ChromaPrint {
+      public String chromaprint;
+      public String duration;
+   }
+
+   /**
     * recording
     */
    private static class Recording {
