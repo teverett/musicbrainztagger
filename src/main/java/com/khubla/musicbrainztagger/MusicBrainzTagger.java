@@ -13,7 +13,7 @@ import org.apache.commons.cli.PosixParser;
 /**
  * @author tom
  */
-public class MusicBrainsTagger {
+public class MusicBrainzTagger {
    public static void main(String[] args) {
       try {
          System.out.println("khubla.com MusicBrainz Tagger");
