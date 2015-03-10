@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.http.HttpEntity;
@@ -25,6 +26,22 @@ import com.google.gson.JsonParser;
  * @author tom
  */
 public class AcoustID {
+   /**
+    * recording
+    */
+   private class Recording {
+      String id;
+   }
+
+   /**
+    * result
+    */
+   private class Result {
+      String id;
+      List<Recording> recordings;
+      String score;
+   };
+
    /**
     * Chromaprint the file passed in
     */
@@ -55,9 +72,18 @@ public class AcoustID {
       final JsonElement statusElement = jobject.get("status");
       if (statusElement.getAsString().compareTo("ok") == 0) {
          final JsonArray jarray = jobject.getAsJsonArray("results");
+         /*
+          * use the first result
+          */
          jobject = jarray.get(0).getAsJsonObject();
-         final JsonElement idElement = jobject.get("id");
-         return idElement.getAsString();
+         final JsonElement resultIdElement = jobject.get("id");
+         final JsonArray recordingsArray = jobject.getAsJsonArray("recordings");
+         /*
+          * use the first recording
+          */
+         final JsonObject recordingJsonObject = recordingsArray.get(0).getAsJsonObject();
+         final JsonElement recordingIdElement = recordingJsonObject.get("id");
+         return recordingIdElement.getAsString();
       } else {
          return null;
       }
@@ -67,12 +93,14 @@ public class AcoustID {
       final Properties properties = new Properties();
       properties.load(AcoustID.class.getResourceAsStream(PROPERTIES));
       final CloseableHttpClient httpclient = HttpClients.createDefault();
-      final String URL = properties.getProperty("url") + "?client=" + properties.getProperty("client") + "&fingerprint=" + chromaprint.chromaprint + "&duration=" + chromaprint.duration;
+      final String URL = properties.getProperty("url") + "?client=" + properties.getProperty("client") + "&meta=recordingids" + "&fingerprint=" + chromaprint.chromaprint + "&duration="
+            + chromaprint.duration;
       final HttpGet httpGet = new HttpGet(URL);
       final CloseableHttpResponse httpResponse = httpclient.execute(httpGet);
       try {
          final HttpEntity httpEntity = httpResponse.getEntity();
          final String json = EntityUtils.toString(httpEntity);
+         System.out.println(json);
          return getMusicBrainzID(json);
       } finally {
          httpResponse.close();
