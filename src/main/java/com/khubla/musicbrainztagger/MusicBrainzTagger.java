@@ -77,9 +77,9 @@ public class MusicBrainzTagger {
     * process file
     */
    private static void processMP3(File mp3File, String fpcalc) throws Exception {
-      final String fingerprint = AcoustID.chromaprint(mp3File, fpcalc);
-      System.out.println(mp3File.getName() + " " + fingerprint);
-      final String lookupResult = AcoustID.lookup(fingerprint);
+      final ChromaPrint chromaprint = AcoustID.chromaprint(mp3File, fpcalc);
+      System.out.println(mp3File.getName() + " " + chromaprint.chromaprint);
+      final String lookupResult = AcoustID.lookup(chromaprint);
       System.out.println(lookupResult);
    }
 

@@ -23,26 +23,29 @@ public class AcoustID {
    /**
     * Chromaprint the file passed in
     */
-   public static String chromaprint(File file, String fpcalc) throws IOException {
+   public static ChromaPrint chromaprint(File file, String fpcalc) throws IOException {
       final ProcessBuilder processBuilder = new ProcessBuilder(fpcalc, null);
       processBuilder.redirectErrorStream(true);
       processBuilder.command().set(1, file.getAbsolutePath());
       final Process fpcalcProc = processBuilder.start();
       final BufferedReader br = new BufferedReader(new InputStreamReader(fpcalcProc.getInputStream()));
       String line;
+      final ChromaPrint ret = new ChromaPrint();
       while ((line = br.readLine()) != null) {
          if (line.startsWith("FINGERPRINT=")) {
-            return line.substring("FINGERPRINT=".length());
+            ret.chromaprint = line.substring("FINGERPRINT=".length());
+         } else if (line.startsWith("DURATION=")) {
+            ret.duration = line.substring("DURATION=".length());
          }
       }
-      return null;
+      return ret;
    }
 
-   public static String lookup(String chromaprint) throws ClientProtocolException, IOException {
-      Properties properties = new Properties();
+   public static String lookup(ChromaPrint chromaprint) throws ClientProtocolException, IOException {
+      final Properties properties = new Properties();
       properties.load(AcoustID.class.getResourceAsStream(PROPERTIES));
       final CloseableHttpClient httpclient = HttpClients.createDefault();
-      final String URL = properties.getProperty("url") + "?client=" + properties.getProperty("client") + "&fingerprint=" + chromaprint;
+      final String URL = properties.getProperty("url") + "?client=" + properties.getProperty("client") + "&fingerprint=" + chromaprint.chromaprint + "&duration=" + chromaprint.duration;
       final HttpGet httpGet = new HttpGet(URL);
       final CloseableHttpResponse httpResponse = httpclient.execute(httpGet);
       try {
