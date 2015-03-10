@@ -54,16 +54,16 @@ public class MusicBrainzTagger {
          /*
           * fpcalc
           */
-         String fpcalc = cmd.getOptionValue(FPCALC);
+         final String fpcalc = cmd.getOptionValue(FPCALC);
          /*
           * get the dir
           */
-         String dir = cmd.getOptionValue(DIR);
+         final String dir = cmd.getOptionValue(DIR);
          if (null != dir) {
             /*
              * walk the dir
              */
-            File rootDir = new File(dir);
+            final File rootDir = new File(dir);
             if (rootDir.exists() && (rootDir.isDirectory())) {
                walkDirectory(rootDir, fpcalc);
             }
@@ -74,11 +74,21 @@ public class MusicBrainzTagger {
    }
 
    /**
+    * process file
+    */
+   private static void processMP3(File mp3File, String fpcalc) throws Exception {
+      final String fingerprint = AcoustID.chromaprint(mp3File, fpcalc);
+      System.out.println(mp3File.getName() + " " + fingerprint);
+      final String lookupResult = AcoustID.lookup(fingerprint);
+      System.out.println(lookupResult);
+   }
+
+   /**
     * recursively walk dirs
     */
    private static void walkDirectory(File dir, String fpcalc) throws Exception {
       final File[] files = dir.listFiles();
-      for (File file : files) {
+      for (final File file : files) {
          if (false == file.isHidden()) {
             if (file.isDirectory()) {
                walkDirectory(file, fpcalc);
@@ -89,14 +99,6 @@ public class MusicBrainzTagger {
             }
          }
       }
-   }
-
-   /**
-    * process file
-    */
-   private static void processMP3(File mp3File, String fpcalc) throws Exception {
-      String fingerprint = AcoustID.chromaprint(mp3File, fpcalc);
-      System.out.println(mp3File.getName() + " " + fingerprint);
    }
 
    /**

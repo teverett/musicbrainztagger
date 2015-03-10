@@ -5,20 +5,29 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+
 /**
  * simple wrapper for AcoustID
- * 
+ *
  * @author tom
  */
 public class AcoustID {
-   // private final static String URL = "http://api.acoustid.org/v2/lookup";
-   // private final static String CLIENTID = "";
+   /**
+    * Chromaprint the file passed in
+    */
    public static String chromaprint(File file, String fpcalc) throws IOException {
-      ProcessBuilder processBuilder = new ProcessBuilder(fpcalc, null);
+      final ProcessBuilder processBuilder = new ProcessBuilder(fpcalc, null);
       processBuilder.redirectErrorStream(true);
       processBuilder.command().set(1, file.getAbsolutePath());
-      Process fpcalcProc = processBuilder.start();
-      BufferedReader br = new BufferedReader(new InputStreamReader(fpcalcProc.getInputStream()));
+      final Process fpcalcProc = processBuilder.start();
+      final BufferedReader br = new BufferedReader(new InputStreamReader(fpcalcProc.getInputStream()));
       String line;
       while ((line = br.readLine()) != null) {
          if (line.startsWith("FINGERPRINT=")) {
@@ -28,6 +37,19 @@ public class AcoustID {
       return null;
    }
 
-   public static void lookup(String chromaprint) {
+   public static String lookup(String chromaprint) throws ClientProtocolException, IOException {
+      final CloseableHttpClient httpclient = HttpClients.createDefault();
+      final String URL = LOOKUPURL + "?client=" + CLIENTID + "&fingerprint=" + chromaprint;
+      final HttpGet httpGet = new HttpGet(URL);
+      final CloseableHttpResponse httpResponse = httpclient.execute(httpGet);
+      try {
+         final HttpEntity httpEntity = httpResponse.getEntity();
+         return EntityUtils.toString(httpEntity);
+      } finally {
+         httpResponse.close();
+      }
    }
+
+   private final static String LOOKUPURL = "http://api.acoustid.org/v2/lookup";
+   private final static String CLIENTID = "O61oSaRV";
 }
