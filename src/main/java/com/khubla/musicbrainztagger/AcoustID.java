@@ -1,13 +1,9 @@
 package com.khubla.musicbrainztagger;
 
-import java.io.ByteArrayOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-
-import org.apache.commons.exec.CommandLine;
-import org.apache.commons.exec.DefaultExecutor;
-import org.apache.commons.exec.ExecuteException;
-import org.apache.commons.exec.PumpStreamHandler;
+import java.io.InputStreamReader;
 
 /**
  * simple wrapper for AcoustID
@@ -17,22 +13,19 @@ import org.apache.commons.exec.PumpStreamHandler;
 public class AcoustID {
    // private final static String URL = "http://api.acoustid.org/v2/lookup";
    // private final static String CLIENTID = "";
-   private final static String FPCALC = "/Users/tom/fpcalc";
-
-   public static String chromaprint(File file) throws ExecuteException, IOException {
-      String command = FPCALC + " \"" + file.getAbsolutePath() + "\"";
-      ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-      CommandLine cmdLine = CommandLine.parse(command);
-      DefaultExecutor executor = new DefaultExecutor();
-      executor.setExitValue(1);
-      PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream);
-      executor.setStreamHandler(streamHandler);
-      int ret = executor.execute(cmdLine);
-      if (0 == ret) {
-         return (outputStream.toString());
-      } else {
-         return null;
+   public static String chromaprint(File file, String fpcalc) throws IOException {
+      ProcessBuilder processBuilder = new ProcessBuilder(fpcalc, null);
+      processBuilder.redirectErrorStream(true);
+      processBuilder.command().set(1, file.getAbsolutePath());
+      Process fpcalcProc = processBuilder.start();
+      BufferedReader br = new BufferedReader(new InputStreamReader(fpcalcProc.getInputStream()));
+      String line;
+      while ((line = br.readLine()) != null) {
+         if (line.startsWith("FINGERPRINT=")) {
+            return line.substring("FINGERPRINT=".length());
+         }
       }
+      return null;
    }
 
    public static void lookup(String chromaprint) {

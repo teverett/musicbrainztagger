@@ -17,10 +17,10 @@ public class MusicBrainsTagger {
    public static void main(String[] args) {
       try {
          System.out.println("khubla.com MusicBrainz Tagger");
-         /*
-          * options
-          */
          final Options options = new Options();
+         /*
+          * DIR option
+          */
          OptionBuilder.withArgName(DIR);
          OptionBuilder.isRequired(false);
          OptionBuilder.withType(String.class);
@@ -28,6 +28,16 @@ public class MusicBrainsTagger {
          OptionBuilder.withDescription("mp3 directory");
          final Option o1 = OptionBuilder.create(DIR);
          options.addOption(o1);
+         /*
+          * FPCALC option
+          */
+         OptionBuilder.withArgName(FPCALC);
+         OptionBuilder.isRequired(false);
+         OptionBuilder.withType(String.class);
+         OptionBuilder.hasArg();
+         OptionBuilder.withDescription("fpcalc executable");
+         final Option o2 = OptionBuilder.create(FPCALC);
+         options.addOption(o2);
          /*
           * parse
           */
@@ -42,6 +52,10 @@ public class MusicBrainsTagger {
             System.exit(0);
          }
          /*
+          * fpcalc
+          */
+         String fpcalc = cmd.getOptionValue(FPCALC);
+         /*
           * get the dir
           */
          String dir = cmd.getOptionValue(DIR);
@@ -51,7 +65,7 @@ public class MusicBrainsTagger {
              */
             File rootDir = new File(dir);
             if (rootDir.exists() && (rootDir.isDirectory())) {
-               walkDirectory(rootDir);
+               walkDirectory(rootDir, fpcalc);
             }
          }
       } catch (final Exception e) {
@@ -62,15 +76,15 @@ public class MusicBrainsTagger {
    /**
     * recursively walk dirs
     */
-   private static void walkDirectory(File dir) throws Exception {
+   private static void walkDirectory(File dir, String fpcalc) throws Exception {
       final File[] files = dir.listFiles();
       for (File file : files) {
          if (false == file.isHidden()) {
             if (file.isDirectory()) {
-               walkDirectory(file);
+               walkDirectory(file, fpcalc);
             } else if (file.isFile()) {
                if (file.getName().toLowerCase().endsWith(".mp3")) {
-                  processMP3(file);
+                  processMP3(file, fpcalc);
                }
             }
          }
@@ -80,8 +94,8 @@ public class MusicBrainsTagger {
    /**
     * process file
     */
-   private static void processMP3(File mp3File) throws Exception {
-      String fingerprint = AcoustID.chromaprint(mp3File);
+   private static void processMP3(File mp3File, String fpcalc) throws Exception {
+      String fingerprint = AcoustID.chromaprint(mp3File, fpcalc);
       System.out.println(mp3File.getName() + " " + fingerprint);
    }
 
@@ -89,4 +103,8 @@ public class MusicBrainsTagger {
     * mp3 dir
     */
    private static final String DIR = "dir";
+   /**
+    * fpcalc dir
+    */
+   private static final String FPCALC = "fpcalc";
 }
