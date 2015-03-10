@@ -14,6 +14,11 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 /**
  * simple wrapper for AcoustID
  *
@@ -41,6 +46,23 @@ public class AcoustID {
       return ret;
    }
 
+   /**
+    * get the musicbrainz id
+    */
+   private static String getMusicBrainzID(String json) {
+      final JsonElement jelement = new JsonParser().parse(json);
+      JsonObject jobject = jelement.getAsJsonObject();
+      final JsonElement statusElement = jobject.get("status");
+      if (statusElement.getAsString().compareTo("ok") == 0) {
+         final JsonArray jarray = jobject.getAsJsonArray("results");
+         jobject = jarray.get(0).getAsJsonObject();
+         final JsonElement idElement = jobject.get("id");
+         return idElement.getAsString();
+      } else {
+         return null;
+      }
+   }
+
    public static String lookup(ChromaPrint chromaprint) throws ClientProtocolException, IOException {
       final Properties properties = new Properties();
       properties.load(AcoustID.class.getResourceAsStream(PROPERTIES));
@@ -50,7 +72,8 @@ public class AcoustID {
       final CloseableHttpResponse httpResponse = httpclient.execute(httpGet);
       try {
          final HttpEntity httpEntity = httpResponse.getEntity();
-         return EntityUtils.toString(httpEntity);
+         final String json = EntityUtils.toString(httpEntity);
+         return getMusicBrainzID(json);
       } finally {
          httpResponse.close();
       }
