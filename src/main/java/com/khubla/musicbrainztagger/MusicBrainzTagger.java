@@ -79,8 +79,10 @@ public class MusicBrainzTagger {
    private static void processMP3(File mp3File, String fpcalc) throws Exception {
       final AcoustID.ChromaPrint chromaprint = AcoustID.chromaprint(mp3File, fpcalc);
       System.out.println(mp3File.getName() + " " + chromaprint.chromaprint);
-      final String lookupResult = AcoustID.lookup(chromaprint);
-      System.out.println(lookupResult);
+      final String musicbrainzId = AcoustID.lookup(chromaprint);
+      System.out.println(musicbrainzId);
+      final String muiscbrainzJSON = MusicBrainz.lookup(musicbrainzId);
+      System.out.println(muiscbrainzJSON);
    }
 
    /**
