@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Properties;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
@@ -38,8 +39,10 @@ public class AcoustID {
    }
 
    public static String lookup(String chromaprint) throws ClientProtocolException, IOException {
+      Properties properties = new Properties();
+      properties.load(AcoustID.class.getResourceAsStream(PROPERTIES));
       final CloseableHttpClient httpclient = HttpClients.createDefault();
-      final String URL = LOOKUPURL + "?client=" + CLIENTID + "&fingerprint=" + chromaprint;
+      final String URL = properties.getProperty("url") + "?client=" + properties.getProperty("client") + "&fingerprint=" + chromaprint;
       final HttpGet httpGet = new HttpGet(URL);
       final CloseableHttpResponse httpResponse = httpclient.execute(httpGet);
       try {
@@ -50,6 +53,5 @@ public class AcoustID {
       }
    }
 
-   private final static String LOOKUPURL = "http://api.acoustid.org/v2/lookup";
-   private final static String CLIENTID = "O61oSaRV";
+   private final static String PROPERTIES = "/acoustid.properties";
 }
