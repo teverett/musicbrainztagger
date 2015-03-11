@@ -85,10 +85,14 @@ public class MusicBrainzTagger {
       final ChromaPrint chromaprint = AcoustID.chromaprint(mp3File, fpcalc);
       System.out.println(mp3File.getName() + " " + chromaprint.getChromaprint());
       final String musicbrainzId = AcoustID.lookup(chromaprint);
-      System.out.println(musicbrainzId);
-      final MusicBrainzResult musicBrainzResult = MusicBrainz.lookup(musicbrainzId);
-      System.out.println(musicBrainzResult.getArtistcredit().get(0).getName());
-      System.out.println(musicBrainzResult.getTitle());
+      if (null != musicbrainzId) {
+         System.out.println(musicbrainzId);
+         final MusicBrainzResult musicBrainzResult = MusicBrainz.lookup(musicbrainzId);
+         if (null != musicBrainzResult) {
+            System.out.println(musicBrainzResult.getArtistcredit().get(0).getName());
+            System.out.println(musicBrainzResult.getTitle());
+         }
+      }
    }
 
    /**

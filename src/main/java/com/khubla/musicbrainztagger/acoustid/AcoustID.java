@@ -56,7 +56,15 @@ public class AcoustID {
       final String json = HTTPUtil.get(url);
       System.out.println(json);
       final Results results = getResults(json);
-      return results.results.get(0).recordings.get(0).id;
+      if (results.status.compareTo("ok") == 0) {
+         if ((results.results.size() > 0) && (results.results.get(0).recordings.size() > 0)) {
+            return results.results.get(0).recordings.get(0).id;
+         } else {
+            return null;
+         }
+      } else {
+         return null;
+      }
    }
 
    private final static String PROPERTIES = "/acoustid.properties";
