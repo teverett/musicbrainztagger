@@ -12,6 +12,8 @@ import org.apache.commons.cli.PosixParser;
 
 import com.khubla.musicbrainztagger.acoustid.AcoustID;
 import com.khubla.musicbrainztagger.acoustid.ChromaPrint;
+import com.khubla.musicbrainztagger.id3.ID3;
+import com.khubla.musicbrainztagger.id3.ID3Data;
 import com.khubla.musicbrainztagger.musicbrainz.MusicBrainz;
 import com.khubla.musicbrainztagger.musicbrainz.MusicBrainzResult;
 
@@ -82,6 +84,10 @@ public class MusicBrainzTagger {
     * process file
     */
    private static void processMP3(File mp3File, String fpcalc) throws Exception {
+      final ID3Data id3Data = ID3.readTag(mp3File);
+      if (null != id3Data) {
+         System.out.println("ID3 Artist " + id3Data.artist + " Title " + id3Data.title + " Release " + id3Data.title);
+      }
       final ChromaPrint chromaprint = AcoustID.chromaprint(mp3File, fpcalc);
       System.out.print("\"" + mp3File.getName() + "\"");
       final String musicbrainzId = AcoustID.lookup(chromaprint);
