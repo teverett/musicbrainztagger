@@ -85,8 +85,7 @@ public class MusicBrainzTagger {
       System.out.println(mp3File.getName() + " " + chromaprint.getChromaprint());
       final String musicbrainzId = AcoustID.lookup(chromaprint);
       System.out.println(musicbrainzId);
-      final String muiscbrainzJSON = MusicBrainz.lookup(musicbrainzId);
-      System.out.println(muiscbrainzJSON);
+      MusicBrainz.lookup(musicbrainzId);
    }
 
    /**
