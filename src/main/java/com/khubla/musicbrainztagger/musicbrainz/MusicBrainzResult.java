@@ -17,6 +17,7 @@ public class MusicBrainzResult {
    String disambiguation;
    @SerializedName("length")
    String length;
+   List<Release> releases = new ArrayList<Release>();
 
    public List<ArtistCredit> getArtistcredit() {
       return artistcredit;
@@ -28,6 +29,10 @@ public class MusicBrainzResult {
 
    public String getLength() {
       return length;
+   }
+
+   public List<Release> getReleases() {
+      return releases;
    }
 
    public String getVideo() {
@@ -44,6 +49,10 @@ public class MusicBrainzResult {
 
    public void setLength(String length) {
       this.length = length;
+   }
+
+   public void setReleases(List<Release> releases) {
+      this.releases = releases;
    }
 
    public void setVideo(String video) {
