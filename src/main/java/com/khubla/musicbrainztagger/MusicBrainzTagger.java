@@ -83,15 +83,17 @@ public class MusicBrainzTagger {
     */
    private static void processMP3(File mp3File, String fpcalc) throws Exception {
       final ChromaPrint chromaprint = AcoustID.chromaprint(mp3File, fpcalc);
-      System.out.println(mp3File.getName() + " " + chromaprint.getChromaprint());
+      System.out.print("\"" + mp3File.getName() + "\"");
       final String musicbrainzId = AcoustID.lookup(chromaprint);
       if (null != musicbrainzId) {
-         System.out.println(musicbrainzId);
          final MusicBrainzResult musicBrainzResult = MusicBrainz.lookup(musicbrainzId);
          if (null != musicBrainzResult) {
-            System.out.println(musicBrainzResult.getArtistcredit().get(0).getName());
-            System.out.println(musicBrainzResult.getTitle());
+            System.out.print("  Artist: " + "\"" + musicBrainzResult.getArtistcredit().get(0).getName() + "\"");
+            System.out.print("  Title: " + "\"" + musicBrainzResult.getTitle() + "\"");
+            System.out.println("  Release: " + "\"" + musicBrainzResult.getReleases().get(0).getTitle() + "\"");
          }
+      } else {
+         System.out.println();
       }
    }
 

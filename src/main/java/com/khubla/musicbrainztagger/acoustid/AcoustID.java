@@ -54,7 +54,6 @@ public class AcoustID {
       final String url = properties.getProperty("url") + "?client=" + properties.getProperty("client") + "&meta=recordingids" + "&fingerprint=" + chromaprint.chromaprint + "&duration="
             + chromaprint.duration;
       final String json = HTTPUtil.get(url);
-      System.out.println(json);
       final Results results = getResults(json);
       if (results.status.compareTo("ok") == 0) {
          if ((results.results.size() > 0) && (results.results.get(0).recordings.size() > 0)) {
