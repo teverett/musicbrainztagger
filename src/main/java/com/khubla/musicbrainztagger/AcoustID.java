@@ -25,8 +25,21 @@ public class AcoustID {
     * chromaprint
     */
    public static class ChromaPrint {
-      public String chromaprint;
-      public String duration;
+      private final String chromaprint;
+      private final String duration;
+
+      public String getChromaprint() {
+         return chromaprint;
+      }
+
+      public String getDuration() {
+         return duration;
+      }
+
+      public ChromaPrint(String chromaprint, String duration) {
+         this.duration = duration;
+         this.chromaprint = chromaprint;
+      }
    }
 
    /**
@@ -62,15 +75,16 @@ public class AcoustID {
       final Process fpcalcProc = processBuilder.start();
       final BufferedReader br = new BufferedReader(new InputStreamReader(fpcalcProc.getInputStream()));
       String line;
-      final ChromaPrint ret = new ChromaPrint();
+      String chromaprint = null;
+      String duration = null;
       while ((line = br.readLine()) != null) {
          if (line.startsWith("FINGERPRINT=")) {
-            ret.chromaprint = line.substring("FINGERPRINT=".length());
+            chromaprint = line.substring("FINGERPRINT=".length());
          } else if (line.startsWith("DURATION=")) {
-            ret.duration = line.substring("DURATION=".length());
+            duration = line.substring("DURATION=".length());
          }
       }
-      return ret;
+      return new ChromaPrint(chromaprint, duration);
    }
 
    /**
