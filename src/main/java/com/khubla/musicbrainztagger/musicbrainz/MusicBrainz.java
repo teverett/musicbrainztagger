@@ -1,9 +1,12 @@
-package com.khubla.musicbrainztagger;
+package com.khubla.musicbrainztagger.musicbrainz;
 
 import java.io.IOException;
 import java.util.Properties;
 
 import org.apache.http.client.ClientProtocolException;
+
+import com.khubla.musicbrainztagger.HTTPUtil;
+import com.khubla.musicbrainztagger.acoustid.AcoustID;
 
 /**
  * @author tom

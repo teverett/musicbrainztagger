@@ -1,11 +1,9 @@
-package com.khubla.musicbrainztagger;
+package com.khubla.musicbrainztagger.acoustid;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 import org.apache.http.client.ClientProtocolException;
@@ -14,6 +12,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.khubla.musicbrainztagger.HTTPUtil;
 
 /**
  * simple wrapper for AcoustID
@@ -21,58 +20,6 @@ import com.google.gson.JsonParser;
  * @author tom
  */
 public class AcoustID {
-   /**
-    * chromaprint
-    */
-   public static class ChromaPrint {
-      private final String chromaprint;
-      private final String duration;
-
-      public String getChromaprint() {
-         return chromaprint;
-      }
-
-      public String getDuration() {
-         return duration;
-      }
-
-      public ChromaPrint(String chromaprint, String duration) {
-         this.duration = duration;
-         this.chromaprint = chromaprint;
-      }
-   }
-
-   /**
-    * recording
-    */
-   private static class Recording {
-      private final String id;
-
-      public String getId() {
-         return id;
-      }
-
-      public Recording(String id) {
-         this.id = id;
-      }
-   }
-
-   /**
-    * result
-    */
-   private static class Result {
-      String id;
-      List<Recording> recordings = new ArrayList<Recording>();
-      String score;
-   }
-
-   /**
-    * results
-    */
-   private static class Results {
-      List<Result> results = new ArrayList<Result>();
-   };
-
    /**
     * Chromaprint the file passed in
     */
@@ -98,18 +45,18 @@ public class AcoustID {
    /**
     * get the musicbrainz id
     */
-   private static AcoustID.Results getResults(String json) {
+   private static Results getResults(String json) {
       final JsonElement jelement = new JsonParser().parse(json);
       JsonObject jobject = jelement.getAsJsonObject();
       final JsonElement statusElement = jobject.get("status");
       if (statusElement.getAsString().compareTo("ok") == 0) {
-         final AcoustID.Results results = new AcoustID.Results();
+         final Results results = new Results();
          final JsonArray jarray = jobject.getAsJsonArray("results");
          /*
           * walk the results
           */
          for (int i = 0; i < jarray.size(); i++) {
-            final AcoustID.Result result = new AcoustID.Result();
+            final Result result = new Result();
             jobject = jarray.get(i).getAsJsonObject();
             result.id = jobject.get("id").getAsString();
             result.score = jobject.get("score").getAsString();
@@ -119,8 +66,8 @@ public class AcoustID {
              */
             for (int j = 0; j < recordingsArray.size(); j++) {
                final JsonObject recordingJsonObject = recordingsArray.get(j).getAsJsonObject();
-               String id = recordingJsonObject.get("id").getAsString();
-               final AcoustID.Recording recording = new AcoustID.Recording(id);
+               final String id = recordingJsonObject.get("id").getAsString();
+               final Recording recording = new Recording(id);
                result.recordings.add(recording);
             }
             results.results.add(result);
@@ -138,7 +85,7 @@ public class AcoustID {
             + chromaprint.duration;
       final String json = HTTPUtil.get(url);
       System.out.println(json);
-      final AcoustID.Results results = getResults(json);
+      final Results results = getResults(json);
       return results.results.get(0).recordings.get(0).id;
    }
 

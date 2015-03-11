@@ -10,6 +10,10 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.PosixParser;
 
+import com.khubla.musicbrainztagger.acoustid.AcoustID;
+import com.khubla.musicbrainztagger.acoustid.ChromaPrint;
+import com.khubla.musicbrainztagger.musicbrainz.MusicBrainz;
+
 /**
  * @author tom
  */
@@ -77,7 +81,7 @@ public class MusicBrainzTagger {
     * process file
     */
    private static void processMP3(File mp3File, String fpcalc) throws Exception {
-      final AcoustID.ChromaPrint chromaprint = AcoustID.chromaprint(mp3File, fpcalc);
+      final ChromaPrint chromaprint = AcoustID.chromaprint(mp3File, fpcalc);
       System.out.println(mp3File.getName() + " " + chromaprint.getChromaprint());
       final String musicbrainzId = AcoustID.lookup(chromaprint);
       System.out.println(musicbrainzId);
