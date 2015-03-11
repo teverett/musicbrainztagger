@@ -8,10 +8,7 @@ import java.util.Properties;
 
 import org.apache.http.client.ClientProtocolException;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.Gson;
 import com.khubla.musicbrainztagger.HTTPUtil;
 
 /**
@@ -46,36 +43,9 @@ public class AcoustID {
     * get the musicbrainz id
     */
    private static Results getResults(String json) {
-      final JsonElement jelement = new JsonParser().parse(json);
-      JsonObject jobject = jelement.getAsJsonObject();
-      final JsonElement statusElement = jobject.get("status");
-      if (statusElement.getAsString().compareTo("ok") == 0) {
-         final Results results = new Results();
-         final JsonArray jarray = jobject.getAsJsonArray("results");
-         /*
-          * walk the results
-          */
-         for (int i = 0; i < jarray.size(); i++) {
-            final Result result = new Result();
-            jobject = jarray.get(i).getAsJsonObject();
-            result.id = jobject.get("id").getAsString();
-            result.score = jobject.get("score").getAsString();
-            final JsonArray recordingsArray = jobject.getAsJsonArray("recordings");
-            /*
-             * walk the recordings
-             */
-            for (int j = 0; j < recordingsArray.size(); j++) {
-               final JsonObject recordingJsonObject = recordingsArray.get(j).getAsJsonObject();
-               final String id = recordingJsonObject.get("id").getAsString();
-               final Recording recording = new Recording(id);
-               result.recordings.add(recording);
-            }
-            results.results.add(result);
-         }
-         return results;
-      } else {
-         return null;
-      }
+      final Gson gson = new Gson();
+      final Results results = gson.fromJson(json, Results.class);
+      return results;
    }
 
    public static String lookup(ChromaPrint chromaprint) throws ClientProtocolException, IOException {
