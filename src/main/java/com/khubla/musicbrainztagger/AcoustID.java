@@ -8,13 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -118,20 +112,12 @@ public class AcoustID {
    public static String lookup(ChromaPrint chromaprint) throws ClientProtocolException, IOException {
       final Properties properties = new Properties();
       properties.load(AcoustID.class.getResourceAsStream(PROPERTIES));
-      final CloseableHttpClient httpclient = HttpClients.createDefault();
-      final String URL = properties.getProperty("url") + "?client=" + properties.getProperty("client") + "&meta=recordingids" + "&fingerprint=" + chromaprint.chromaprint + "&duration="
+      final String url = properties.getProperty("url") + "?client=" + properties.getProperty("client") + "&meta=recordingids" + "&fingerprint=" + chromaprint.chromaprint + "&duration="
             + chromaprint.duration;
-      final HttpGet httpGet = new HttpGet(URL);
-      final CloseableHttpResponse httpResponse = httpclient.execute(httpGet);
-      try {
-         final HttpEntity httpEntity = httpResponse.getEntity();
-         final String json = EntityUtils.toString(httpEntity);
-         System.out.println(json);
-         final AcoustID.Results results = getResults(json);
-         return results.results.get(0).recordings.get(0).id;
-      } finally {
-         httpResponse.close();
-      }
+      final String json = HTTPUtil.get(url);
+      System.out.println(json);
+      final AcoustID.Results results = getResults(json);
+      return results.results.get(0).recordings.get(0).id;
    }
 
    private final static String PROPERTIES = "/acoustid.properties";
