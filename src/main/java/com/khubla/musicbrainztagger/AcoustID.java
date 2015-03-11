@@ -46,7 +46,15 @@ public class AcoustID {
     * recording
     */
    private static class Recording {
-      String id;
+      private final String id;
+
+      public String getId() {
+         return id;
+      }
+
+      public Recording(String id) {
+         this.id = id;
+      }
    }
 
    /**
@@ -110,9 +118,9 @@ public class AcoustID {
              * walk the recordings
              */
             for (int j = 0; j < recordingsArray.size(); j++) {
-               final AcoustID.Recording recording = new AcoustID.Recording();
                final JsonObject recordingJsonObject = recordingsArray.get(j).getAsJsonObject();
-               recording.id = recordingJsonObject.get("id").getAsString();
+               String id = recordingJsonObject.get("id").getAsString();
+               final AcoustID.Recording recording = new AcoustID.Recording(id);
                result.recordings.add(recording);
             }
             results.results.add(result);
