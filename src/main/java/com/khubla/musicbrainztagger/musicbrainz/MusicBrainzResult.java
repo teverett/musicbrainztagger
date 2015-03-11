@@ -18,6 +18,8 @@ public class MusicBrainzResult {
    @SerializedName("length")
    String length;
    List<Release> releases = new ArrayList<Release>();
+   String title;
+   String id;
 
    public List<ArtistCredit> getArtistcredit() {
       return artistcredit;
@@ -27,12 +29,20 @@ public class MusicBrainzResult {
       return disambiguation;
    }
 
+   public String getId() {
+      return id;
+   }
+
    public String getLength() {
       return length;
    }
 
    public List<Release> getReleases() {
       return releases;
+   }
+
+   public String getTitle() {
+      return title;
    }
 
    public String getVideo() {
@@ -47,12 +57,20 @@ public class MusicBrainzResult {
       this.disambiguation = disambiguation;
    }
 
+   public void setId(String id) {
+      this.id = id;
+   }
+
    public void setLength(String length) {
       this.length = length;
    }
 
    public void setReleases(List<Release> releases) {
       this.releases = releases;
+   }
+
+   public void setTitle(String title) {
+      this.title = title;
    }
 
    public void setVideo(String video) {

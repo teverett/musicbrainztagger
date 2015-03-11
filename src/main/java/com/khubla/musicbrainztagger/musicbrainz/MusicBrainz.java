@@ -27,7 +27,6 @@ public class MusicBrainz {
       properties.load(AcoustID.class.getResourceAsStream(PROPERTIES));
       final String url = properties.getProperty("url") + recordingId + "?inc=artist-credits+isrcs+releases&fmt=json";
       final String json = HTTPUtil.get(url);
-      System.out.println(json);
       return getResults(json);
    }
 

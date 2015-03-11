@@ -13,6 +13,7 @@ import org.apache.commons.cli.PosixParser;
 import com.khubla.musicbrainztagger.acoustid.AcoustID;
 import com.khubla.musicbrainztagger.acoustid.ChromaPrint;
 import com.khubla.musicbrainztagger.musicbrainz.MusicBrainz;
+import com.khubla.musicbrainztagger.musicbrainz.MusicBrainzResult;
 
 /**
  * @author tom
@@ -85,7 +86,9 @@ public class MusicBrainzTagger {
       System.out.println(mp3File.getName() + " " + chromaprint.getChromaprint());
       final String musicbrainzId = AcoustID.lookup(chromaprint);
       System.out.println(musicbrainzId);
-      MusicBrainz.lookup(musicbrainzId);
+      final MusicBrainzResult musicBrainzResult = MusicBrainz.lookup(musicbrainzId);
+      System.out.println(musicBrainzResult.getArtistcredit().get(0).getName());
+      System.out.println(musicBrainzResult.getTitle());
    }
 
    /**
