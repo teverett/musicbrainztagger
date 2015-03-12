@@ -1,0 +1,5 @@
+write musicbrainz id into id3 and acoustid
+integrate to amazon to get cover art
+default strategy should create dirs
+change command-line params to have an in-dir and out-dir
+
