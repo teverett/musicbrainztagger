@@ -7,6 +7,7 @@ import org.apache.http.client.ClientProtocolException;
 
 import com.google.gson.Gson;
 import com.khubla.musicbrainztagger.HTTPUtil;
+import com.khubla.musicbrainztagger.TrackInformation;
 import com.khubla.musicbrainztagger.acoustid.AcoustID;
 
 /**
@@ -22,12 +23,17 @@ public class MusicBrainz {
       return result;
    }
 
-   public static MusicBrainzResult lookup(String recordingId) throws ClientProtocolException, IOException {
+   public static TrackInformation lookup(String recordingId) throws ClientProtocolException, IOException {
       final Properties properties = new Properties();
       properties.load(AcoustID.class.getResourceAsStream(PROPERTIES));
       final String url = properties.getProperty("url") + recordingId + "?inc=artist-credits+isrcs+releases&fmt=json";
       final String json = HTTPUtil.get(url);
-      return getResults(json);
+      final MusicBrainzResult musicBrainzResult = getResults(json);
+      if (null != musicBrainzResult) {
+         return new TrackInformation(musicBrainzResult.getArtistcredit().get(0).getName(), musicBrainzResult.getTitle(), musicBrainzResult.getReleases().get(0).getTitle());
+      } else {
+         return null;
+      }
    }
 
    private final static String PROPERTIES = "/musicbrainz.properties";
