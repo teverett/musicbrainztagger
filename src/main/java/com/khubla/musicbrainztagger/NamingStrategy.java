@@ -1,8 +1,10 @@
 package com.khubla.musicbrainztagger;
 
+import java.io.File;
+
 /**
  * @author tom
  */
 public interface NamingStrategy {
-   String name(TrackInformation trackInformation);
+	File name(File rootDirectory, TrackInformation trackInformation);
 }
