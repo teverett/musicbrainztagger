@@ -9,6 +9,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.PosixParser;
+import org.apache.commons.io.FileUtils;
 
 import com.khubla.musicbrainztagger.acoustid.AcoustID;
 import com.khubla.musicbrainztagger.acoustid.ChromaPrint;
@@ -16,6 +17,7 @@ import com.khubla.musicbrainztagger.id3.ID3;
 import com.khubla.musicbrainztagger.id3.ID3Data;
 import com.khubla.musicbrainztagger.musicbrainz.MusicBrainz;
 import com.khubla.musicbrainztagger.strategy.DefaultNamingStrategy;
+import com.khubla.musicbrainztagger.strategy.DefaultTaggingStrategy;
 import com.khubla.musicbrainztagger.strategy.DefaultTrackinformationStrategy;
 
 /**
@@ -99,6 +101,7 @@ public class MusicBrainzTagger {
    private static void processMP3(File mp3File, String fpcalc, File outputDirectory) throws Exception {
       final NamingStrategy namingStrategy = new DefaultNamingStrategy();
       final TrackInformationStrategy trackInformationStrategy = new DefaultTrackinformationStrategy();
+      final TaggingStrategy taggingStrategy = new DefaultTaggingStrategy();
       final ID3Data id3Data = ID3.readTag(mp3File);
       if (null != id3Data) {
          // System.out.println("ID3 Artist " + id3Data.artist + " Title " +
@@ -108,11 +111,34 @@ public class MusicBrainzTagger {
       System.out.println("\"" + mp3File.getName() + "\"");
       final String musicbrainzId = AcoustID.lookup(chromaprint);
       if (null != musicbrainzId) {
+         /*
+          * get the track info from MusicBrainz
+          */
          final TrackInformation trackInformation = MusicBrainz.lookup(musicbrainzId);
          if (null != trackInformation) {
+            /*
+             * figure out the final Track information
+             */
             final TrackInformation finalTrackInformation = trackInformationStrategy.merge(id3Data, trackInformation);
-            final File outputFileName = namingStrategy.name(outputDirectory, finalTrackInformation);
-            System.out.println("Recommended Filename: " + outputFileName.toString());
+            /*
+             * generate a name
+             */
+            final String outputFileName = namingStrategy.name(outputDirectory, finalTrackInformation);
+            /*
+             * create dirs
+             */
+            File outputFile = new File(outputFileName);
+            FileUtils.forceMkdir(outputFile.getParentFile());
+            /*
+             * copy file
+             */
+            FileUtils.copyFile(mp3File, outputFile);
+            /*
+             * tag
+             */
+            final ID3Data finalID3Data = taggingStrategy.tag(finalTrackInformation);
+            outputFile = new File(outputFileName);
+            ID3.writeTag(outputFile, finalID3Data);
          }
       }
    }

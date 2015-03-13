@@ -52,7 +52,9 @@ public class ID3 {
          tag.setField(FieldKey.ARTIST, id3Data.artist);
          tag.setField(FieldKey.TITLE, id3Data.title);
          tag.setField(FieldKey.ALBUM, id3Data.album);
-         tag.setField(FieldKey.MUSICBRAINZ_TRACK_ID, id3Data.musicbrainzid);
+         if (null != id3Data.musicbrainzid) {
+            tag.setField(FieldKey.MUSICBRAINZ_TRACK_ID, id3Data.musicbrainzid);
+         }
          if (null != id3Data.coverart) {
             final Artwork artWork = new Artwork();
             artWork.setBinaryData(id3Data.coverart);

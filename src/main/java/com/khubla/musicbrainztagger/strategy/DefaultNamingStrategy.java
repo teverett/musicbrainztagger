@@ -13,7 +13,7 @@ public class DefaultNamingStrategy implements NamingStrategy {
     * the default strategy is <artist>/<release>/<title>.mp3
     */
    @Override
-   public File name(File rootDirectory, TrackInformation trackInformation) {
+   public String name(File rootDirectory, TrackInformation trackInformation) {
       String filename = rootDirectory.getAbsolutePath().toString();
       filename += File.separator;
       if (null != trackInformation.getArtist()) {
@@ -25,6 +25,6 @@ public class DefaultNamingStrategy implements NamingStrategy {
       if (null != trackInformation.getTitle()) {
          filename += trackInformation.getTitle().trim() + ".mp3";
       }
-      return new File(filename);
+      return filename;
    }
 }

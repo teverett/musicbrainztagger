@@ -6,5 +6,5 @@ import java.io.File;
  * @author tom
  */
 public interface NamingStrategy {
-   File name(File rootDirectory, TrackInformation trackInformation);
+   String name(File rootDirectory, TrackInformation trackInformation);
 }
