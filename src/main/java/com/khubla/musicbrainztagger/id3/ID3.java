@@ -27,7 +27,11 @@ public class ID3 {
             ret.artist = tag.getFirst(FieldKey.ARTIST);
             ret.title = tag.getFirst(FieldKey.TITLE);
             ret.album = tag.getFirst(FieldKey.ALBUM);
-            ret.coverart = tag.getFirstArtwork().getBinaryData();
+            if (null != tag.getFirstArtwork()) {
+               ret.coverart = tag.getFirstArtwork().getBinaryData();
+            } else {
+               ret.coverart = null;
+            }
             return ret;
          } else {
             return null;

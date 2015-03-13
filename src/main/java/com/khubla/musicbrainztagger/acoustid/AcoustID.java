@@ -43,16 +43,20 @@ public class AcoustID {
     * get the highest rated result
     */
    private static Result getBestResult(Results results) {
-      Result bestResult = results.results.get(0);
-      int currentScore = Integer.parseInt(bestResult.score);
-      for (final Result result : results.results) {
-         final int score = Integer.parseInt(result.score);
-         if (score > currentScore) {
-            bestResult = result;
-            currentScore = score;
+      if (results.results.size() > 0) {
+         Result bestResult = results.results.get(0);
+         double currentScore = Double.parseDouble(bestResult.score);
+         for (final Result result : results.results) {
+            final double score = Double.parseDouble(result.score);
+            if (score > currentScore) {
+               bestResult = result;
+               currentScore = score;
+            }
          }
+         return bestResult;
+      } else {
+         return null;
       }
-      return bestResult;
    }
 
    /**
@@ -82,10 +86,18 @@ public class AcoustID {
           * get the best match
           */
          final Result bestResult = getBestResult(results);
-         /*
-          * return the id
-          */
-         return bestResult.recordings.get(0).id;
+         if (null != bestResult) {
+            /*
+             * return the id
+             */
+            if (bestResult.recordings.size() > 0) {
+               return bestResult.recordings.get(0).id;
+            } else {
+               return null;
+            }
+         } else {
+            return null;
+         }
       } else {
          return null;
       }

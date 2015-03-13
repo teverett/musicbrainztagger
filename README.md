@@ -11,7 +11,8 @@ musicbrainztagger requires the command-line application [fpcalc](https://acousti
 Invocation
 -----
 
-musicbrainztagger takes two command line arguments
+musicbrainztagger takes three command line arguments
 
-* --dir.  The location of the mp3 files
+* --inputdir.  The input location of the mp3 files
+* --outputdir. The output location 
 * --fpcalc.  The location of the fpcalc application
