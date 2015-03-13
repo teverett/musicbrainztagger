@@ -15,15 +15,15 @@ public class DefaultNamingStrategy implements NamingStrategy {
    @Override
    public File name(File rootDirectory, TrackInformation trackInformation) {
       String filename = rootDirectory.getAbsolutePath().toString();
-      filename += File.pathSeparator;
+      filename += File.separator;
       if (null != trackInformation.getArtist()) {
-         filename += trackInformation.getArtist() + File.pathSeparator;
+         filename += trackInformation.getArtist().trim() + File.separator;
       }
       if (null != trackInformation.getRelease()) {
-         filename += "-" + trackInformation.getRelease() + File.pathSeparator;
+         filename += trackInformation.getRelease().trim() + File.separator;
       }
       if (null != trackInformation.getTitle()) {
-         filename += "-" + trackInformation.getTitle() + ".mp3";
+         filename += trackInformation.getTitle().trim() + ".mp3";
       }
       return new File(filename);
    }
