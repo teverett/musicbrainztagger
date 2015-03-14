@@ -19,6 +19,10 @@ import com.khubla.musicbrainztagger.strategy.DefaultTrackinformationStrategy;
  */
 public class Tagger {
    /**
+    * number of seconds to wait b/t musicbrainz queries
+    */
+   static final int queryrate = 5;
+   /**
     * input mp3's
     */
    final String inputDir;
@@ -72,7 +76,6 @@ public class Tagger {
    private void processMP3(File mp3File, String fpcalc, File outputDirectory) throws Exception {
       final ID3Data id3Data = ID3.readTag(mp3File);
       final ChromaPrint chromaprint = AcoustID.chromaprint(mp3File, fpcalc);
-      System.out.println("\"" + mp3File.getName() + "\"");
       final String musicbrainzId = AcoustID.lookup(chromaprint);
       if (null != musicbrainzId) {
          /*
@@ -99,11 +102,16 @@ public class Tagger {
             final ID3Data finalID3Data = taggingStrategy.tag(finalTrackInformation);
             outputFile = new File(outputFileName);
             ID3.writeTag(outputFile, finalID3Data);
+            /*
+             * dump to console
+             */
+            System.out.println("\"" + mp3File.getName() + "\" --> \"" + outputFile.getName() + "\"");
          }
       } else {
          /*
           * we have no idea what this file is. Drop it in the right place, in UNCATEGORIZED
           */
+         System.out.println("Unmatched: \"" + mp3File.getName() + "\"");
       }
    }
 
@@ -139,7 +147,7 @@ public class Tagger {
                    * brief sleep so we don't overload musicbrainz
                    */
                   // https://musicbrainz.org/doc/XML_Web_Service/Rate_Limiting
-                  Thread.sleep(5000);
+                  Thread.sleep(queryrate * 1000);
                }
             }
          }

@@ -27,11 +27,16 @@ public class MusicBrainz {
       properties.load(MusicBrainz.class.getResourceAsStream(PROPERTIES));
       final String url = properties.getProperty("url") + recordingId + "?inc=artist-credits+isrcs+releases&fmt=json";
       final HTTPUtil.Response response = HTTPUtil.get(url);
-      final String json = response.response;
-      final MusicBrainzResult musicBrainzResult = getResults(json);
-      if (null != musicBrainzResult) {
-         return new TrackInformation(musicBrainzResult.getArtistcredit().get(0).getName(), musicBrainzResult.getTitle(), musicBrainzResult.getReleases().get(0).getTitle(), recordingId, null);
+      if (response.responseCode == 200) {
+         final String json = response.response;
+         final MusicBrainzResult musicBrainzResult = getResults(json);
+         if (null != musicBrainzResult) {
+            return new TrackInformation(musicBrainzResult.getArtistcredit().get(0).getName(), musicBrainzResult.getTitle(), musicBrainzResult.getReleases().get(0).getTitle(), recordingId, null);
+         } else {
+            return null;
+         }
       } else {
+         System.out.println("MusicBrainz result " + response.responseCode);
          return null;
       }
    }
