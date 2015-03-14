@@ -172,11 +172,15 @@ public class Tagger {
 					walkDirectory(file, fpcalc, outputDirectory);
 				} else if (file.isFile()) {
 					if (file.getName().toLowerCase().endsWith(".mp3")) {
-						processMP3(file, fpcalc, outputDirectory);
-						/*
-						 * brief sleep so we don't overload musicbrainz
-						 */
-						Thread.sleep(queryrate * 1000);
+						try {
+							processMP3(file, fpcalc, outputDirectory);
+							/*
+							 * brief sleep so we don't overload musicbrainz
+							 */
+							Thread.sleep(queryrate * 1000);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
 				}
 			}

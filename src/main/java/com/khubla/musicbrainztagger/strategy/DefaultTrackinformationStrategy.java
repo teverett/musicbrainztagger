@@ -17,45 +17,47 @@ public class DefaultTrackinformationStrategy implements
 		String title = null;
 		byte[] coverart = null;
 		String isrc = null;
-		/**
-		 * artist
-		 */
-		if ((id3Data.artist != null) && (id3Data.artist.length() > 0)) {
-			artist = id3Data.artist;
-		} else {
-			artist = trackInformation.getArtist();
+		if (null != id3Data) {
+			/**
+			 * artist
+			 */
+			if ((id3Data.artist != null) && (id3Data.artist.length() > 0)) {
+				artist = id3Data.artist;
+			} else {
+				artist = trackInformation.getArtist();
+			}
+			/**
+			 * release
+			 */
+			if ((id3Data.album != null) && (id3Data.album.length() > 0)) {
+				release = id3Data.album;
+			} else {
+				release = trackInformation.getRelease();
+			}
+			/**
+			 * title
+			 */
+			if ((id3Data.title != null) && (id3Data.title.length() > 0)) {
+				title = id3Data.title;
+			} else {
+				title = trackInformation.getTitle();
+			}
+			/**
+			 * art
+			 */
+			if (null != id3Data.coverart) {
+				coverart = id3Data.coverart;
+			}
+			/**
+			 * isrc
+			 */
+			if ((id3Data.isrc != null) && (id3Data.isrc.length() > 0)) {
+				isrc = id3Data.isrc;
+			} else {
+				isrc = trackInformation.getIsrc();
+			}
+			return new TrackInformation(artist, title, release,
+					trackInformation.getMusicbrainzid(), coverart, isrc);
 		}
-		/**
-		 * release
-		 */
-		if ((id3Data.album != null) && (id3Data.album.length() > 0)) {
-			release = id3Data.album;
-		} else {
-			release = trackInformation.getRelease();
-		}
-		/**
-		 * title
-		 */
-		if ((id3Data.title != null) && (id3Data.title.length() > 0)) {
-			title = id3Data.title;
-		} else {
-			title = trackInformation.getTitle();
-		}
-		/**
-		 * art
-		 */
-		if (null != id3Data.coverart) {
-			coverart = id3Data.coverart;
-		}
-		/**
-		 * isrc
-		 */
-		if ((id3Data.isrc != null) && (id3Data.isrc.length() > 0)) {
-			isrc = id3Data.isrc;
-		} else {
-			isrc = trackInformation.getIsrc();
-		}
-		return new TrackInformation(artist, title, release,
-				trackInformation.getMusicbrainzid(), coverart, isrc);
 	}
 }

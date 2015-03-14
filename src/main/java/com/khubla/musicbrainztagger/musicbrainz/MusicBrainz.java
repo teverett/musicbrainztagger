@@ -56,6 +56,10 @@ public class MusicBrainz {
 		String title = musicBrainzResult.getTitle();
 		String release = musicBrainzResult.getReleases().get(0).getTitle();
 		String isrc = null;
+		if ((null != musicBrainzResult.isrcs)
+				&& (musicBrainzResult.isrcs.size() > 0)) {
+			isrc = musicBrainzResult.isrcs.get(0);
+		}
 		return new TrackInformation(artist, title, release, recordingId, null,
 				isrc);
 	}
