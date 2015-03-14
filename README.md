@@ -16,3 +16,7 @@ musicbrainztagger takes three command line arguments
 * --inputdir.  The input location of the mp3 files
 * --outputdir. The output location 
 * --fpcalc.  The location of the fpcalc application
+
+For example:
+
+`java -jar musicbrainztagger.jar --inputdir=/home/mymusic --outputdir=/home/mynewmusic --fpcalc=/home/fpcalc`
