@@ -139,7 +139,7 @@ public class Tagger {
                    * brief sleep so we don't overload musicbrainz
                    */
                   // https://musicbrainz.org/doc/XML_Web_Service/Rate_Limiting
-                  Thread.sleep(2000);
+                  Thread.sleep(5000);
                }
             }
          }
