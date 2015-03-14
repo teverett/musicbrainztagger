@@ -56,8 +56,21 @@ public class DefaultTrackinformationStrategy implements
 			} else {
 				isrc = trackInformation.getIsrc();
 			}
-			return new TrackInformation(artist, title, release,
-					trackInformation.getMusicbrainzid(), coverart, isrc);
+		} else {
+			/*
+			 * no id3, just copy the tags
+			 */
+			artist = trackInformation.getArtist();
+			release = trackInformation.getRelease();
+			title = trackInformation.getTitle();
+			coverart = null;
+			isrc = trackInformation.getIsrc();
 		}
+		/*
+		 * done
+		 */
+		return new TrackInformation(artist, title, release,
+				trackInformation.getMusicbrainzid(), coverart, isrc);
+
 	}
 }
