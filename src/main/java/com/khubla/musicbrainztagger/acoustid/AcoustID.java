@@ -9,7 +9,7 @@ import java.util.Properties;
 import org.apache.http.client.ClientProtocolException;
 
 import com.google.gson.Gson;
-import com.khubla.musicbrainztagger.HTTPUtil;
+import com.khubla.musicbrainztagger.http.HTTPUtil;
 
 /**
  * simple wrapper for AcoustID
@@ -76,7 +76,8 @@ public class AcoustID {
       properties.load(AcoustID.class.getResourceAsStream(PROPERTIES));
       final String url = properties.getProperty("url") + "?client=" + properties.getProperty("client") + "&meta=recordingids" + "&fingerprint=" + chromaprint.chromaprint + "&duration="
             + chromaprint.duration;
-      final String json = HTTPUtil.get(url);
+      final HTTPUtil.Response response = HTTPUtil.get(url);
+      final String json = response.response;
       final Results results = getResults(json);
       /*
        * check status

@@ -1,6 +1,7 @@
 package com.khubla.musicbrainztagger;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
 
@@ -18,17 +19,58 @@ import com.khubla.musicbrainztagger.strategy.DefaultTrackinformationStrategy;
  */
 public class Tagger {
    /**
+    * input mp3's
+    */
+   final String inputDir;
+   /**
+    * output mp3's
+    */
+   final String outputDir;
+   /**
+    * fpcalc path
+    */
+   final String fpcalc;
+   /**
+    * random strategy
+    */
+   final NamingStrategy namingStrategy = new DefaultNamingStrategy();
+   /**
+    * track information
+    */
+   final TrackInformationStrategy trackInformationStrategy = new DefaultTrackinformationStrategy();
+   /**
+    * tagging strategy
+    */
+   final TaggingStrategy taggingStrategy = new DefaultTaggingStrategy();
+
+   /**
+    * ctor
+    */
+   public Tagger(String inputDir, String outputDir, String fpcalc) {
+      this.inputDir = inputDir;
+      this.outputDir = outputDir;
+      this.fpcalc = fpcalc;
+   }
+
+   /**
+    * copy the mp3 from the input dir to the outputDir
+    */
+   private void copyFile(File mp3File, File outputFile) throws IOException {
+      /*
+       * create dirs
+       */
+      FileUtils.forceMkdir(outputFile.getParentFile());
+      /*
+       * copy file
+       */
+      FileUtils.copyFile(mp3File, outputFile);
+   }
+
+   /**
     * process file
     */
-   private static void processMP3(File mp3File, String fpcalc, File outputDirectory) throws Exception {
-      final NamingStrategy namingStrategy = new DefaultNamingStrategy();
-      final TrackInformationStrategy trackInformationStrategy = new DefaultTrackinformationStrategy();
-      final TaggingStrategy taggingStrategy = new DefaultTaggingStrategy();
+   private void processMP3(File mp3File, String fpcalc, File outputDirectory) throws Exception {
       final ID3Data id3Data = ID3.readTag(mp3File);
-      if (null != id3Data) {
-         // System.out.println("ID3 Artist " + id3Data.artist + " Title " +
-         // id3Data.title + " Release " + id3Data.title);
-      }
       final ChromaPrint chromaprint = AcoustID.chromaprint(mp3File, fpcalc);
       System.out.println("\"" + mp3File.getName() + "\"");
       final String musicbrainzId = AcoustID.lookup(chromaprint);
@@ -47,14 +89,10 @@ public class Tagger {
              */
             final String outputFileName = namingStrategy.name(outputDirectory, finalTrackInformation);
             /*
-             * create dirs
+             * copy
              */
             File outputFile = new File(outputFileName);
-            FileUtils.forceMkdir(outputFile.getParentFile());
-            /*
-             * copy file
-             */
-            FileUtils.copyFile(mp3File, outputFile);
+            copyFile(mp3File, outputFile);
             /*
              * tag
              */
@@ -62,14 +100,34 @@ public class Tagger {
             outputFile = new File(outputFileName);
             ID3.writeTag(outputFile, finalID3Data);
          }
+      } else {
+         /*
+          * we have no idea what this file is. Drop it in the right place, in UNCATEGORIZED
+          */
       }
    }
 
    /**
-    * recursively walk dirs
+    * tag the mp3's and sort them
     */
-   private static void walkDirectory(File dir, String fpcalc, File outputDirectory) throws Exception {
-      final File[] files = dir.listFiles();
+   public void tag() throws Exception {
+      if (null != inputDir) {
+         /*
+          * walk the dir
+          */
+         final File inputDirectory = new File(inputDir);
+         final File outputDirectory = new File(outputDir);
+         if (inputDirectory.exists() && (inputDirectory.isDirectory())) {
+            walkDirectory(inputDirectory, fpcalc, outputDirectory);
+         }
+      }
+   }
+
+   /**
+    * recursively walk input directory
+    */
+   private void walkDirectory(File inputDirectory, String fpcalc, File outputDirectory) throws Exception {
+      final File[] files = inputDirectory.listFiles();
       for (final File file : files) {
          if (false == file.isHidden()) {
             if (file.isDirectory()) {
@@ -81,32 +139,9 @@ public class Tagger {
                    * brief sleep so we don't overload musicbrainz
                    */
                   // https://musicbrainz.org/doc/XML_Web_Service/Rate_Limiting
-                  Thread.sleep(1000);
+                  Thread.sleep(2000);
                }
             }
-         }
-      }
-   }
-
-   private final String inputDir;
-   private final String outputDir;
-   private final String fpcalc;
-
-   public Tagger(String inputDir, String outputDir, String fpcalc) {
-      this.inputDir = inputDir;
-      this.outputDir = outputDir;
-      this.fpcalc = fpcalc;
-   }
-
-   public void tag() throws Exception {
-      if (null != inputDir) {
-         /*
-          * walk the dir
-          */
-         final File rootDir = new File(inputDir);
-         final File outputDirectory = new File(outputDir);
-         if (rootDir.exists() && (rootDir.isDirectory())) {
-            walkDirectory(rootDir, fpcalc, outputDirectory);
          }
       }
    }

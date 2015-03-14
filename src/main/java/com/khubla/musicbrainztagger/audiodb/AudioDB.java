@@ -5,8 +5,8 @@ import java.util.Properties;
 
 import org.apache.http.client.ClientProtocolException;
 
-import com.khubla.musicbrainztagger.HTTPUtil;
 import com.khubla.musicbrainztagger.TrackInformation;
+import com.khubla.musicbrainztagger.http.HTTPUtil;
 
 /**
  * @author tom
