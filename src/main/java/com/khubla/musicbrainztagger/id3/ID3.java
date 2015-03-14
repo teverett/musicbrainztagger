@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.tag.FieldDataInvalidException;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.KeyNotFoundException;
@@ -56,6 +57,8 @@ public class ID3 {
 			} else {
 				return null;
 			}
+		} catch (InvalidAudioFrameException e) {
+			return null;
 		} catch (final Exception e) {
 			throw new Exception("Exception reading tag", e);
 		}
