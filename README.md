@@ -16,7 +16,7 @@ musicbrainztagger takes these command line arguments
 * --inputdir.  The input location of the mp3 files
 * --outputdir. The output location 
 * --fpcalc.  The location of the fpcalc application
-* -- delete.  Delete the input files after processing them
+* --delete.  Delete the input files after processing them
 
 For example:
 
