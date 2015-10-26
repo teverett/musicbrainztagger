@@ -21,3 +21,9 @@ musicbrainztagger takes these command line arguments
 For example:
 
 `java -jar musicbrainztagger.jar --inputdir=/home/mymusic --outputdir=/home/mynewmusic --fpcalc=/home/fpcalc`
+
+Travis Status
+---------
+
+<a href="https://travis-ci.org/teverett/musicbrainztagger"><img src="https://api.travis-ci.org/teverett/musicbrainztagger.png"></a>
+
