@@ -1,2 +1,21 @@
 language: java
+sudo: required
+env:
+  global:
+   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+   #   via the "travis encrypt" command using the project repo's public key
+   - secure: "mR+fiYmxbBXKlM2nwjvN+5oWvG5AdifJtbfwwWewpqG5PMyUscYioaOgHehl8DjDCVCzQ+cbyUAfGFttLtYbzEiQinxP9F4IaA6hjV/o+51tZA2Ghnh2xUd3Zs3QiIk73I3CaWMZ1etH0TzEOIiu9HRfHF0uuMAla7hBXlHay/M="
 
+before_install:
+      - echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
+
+addons:
+  coverity_scan:
+    project:
+      name: "teverett/musicbrainztagger"
+      description: "Build submitted via Travis CI"
+    notification_email: tom@khubla.com
+    build_command_prepend: "mvn clean"
+    build_command:   "mvn -DskipTests=true compile"
+    branch_pattern: coverity_scan
+    
