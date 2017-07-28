@@ -27,3 +27,9 @@ Travis Status
 
 <a href="https://travis-ci.org/teverett/musicbrainztagger"><img src="https://api.travis-ci.org/teverett/musicbrainztagger.png"></a>
 
+Coverity Status
+---------
+<a href="https://scan.coverity.com/projects/teverett-musicbrainztagger">
+  <img alt="Coverity Scan Build Status"
+       src="https://scan.coverity.com/projects/13300/badge.svg"/>
+</a>
