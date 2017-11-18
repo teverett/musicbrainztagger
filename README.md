@@ -1,4 +1,4 @@
-[![Travis](https://travis-ci.org/teverett/musicbrainztagger)](https://travis-ci.org/teverett/musicbrainztagger)
+[![Travis](https://travis-ci.org/teverett/musicbrainztagger.svg?branch=master)](https://travis-ci.org/teverett/musicbrainztagger)
 [![Coverity Scan](https://scan.coverity.com/projects/13300/badge.svg)](https://scan.coverity.com/projects/teverett-musicbrainztagger)
 
 musicbrainztagger
