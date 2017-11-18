@@ -1,6 +1,6 @@
 [![Travis](https://travis-ci.org/teverett/musicbrainztagger.svg?branch=master)](https://travis-ci.org/teverett/musicbrainztagger)
 [![Coverity Scan](https://scan.coverity.com/projects/13300/badge.svg)](https://scan.coverity.com/projects/teverett-musicbrainztagger)
-
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/3e0e8536940048af8d31a6f45a5025f6)](https://www.codacy.com/app/teverett/musicbrainztagger?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=teverett/musicbrainztagger&amp;utm_campaign=Badge_Grade)
 musicbrainztagger
 ======
 
